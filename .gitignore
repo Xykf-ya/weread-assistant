@@ -1,0 +1,30 @@
+# 环境变量（含 API Key，不进 git）
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 数据库
+backend/data/
+werss-data/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+.docker/
+
+# 临时文件
+*.tmp
+*.log

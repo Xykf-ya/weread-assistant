@@ -1,0 +1,25 @@
+services:
+  werss:
+    image: ghcr.io/rachelos/we-mp-rss:latest
+    container_name: werss
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./werss-data:/app/data
+    environment:
+      - USERNAME=admin
+      - PASSWORD=${WERSS_PASSWORD:-admin@123}
+    restart: unless-stopped
+
+  assistant:
+    build: ./backend
+    container_name: mp-assistant
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/data:/app/data
+    env_file:
+      - .env
+    depends_on:
+      - werss
+    restart: unless-stopped
