@@ -24,13 +24,24 @@ async function request<T>(url: string, options: RequestInit = {}): Promise<T> {
     },
   });
 
-  const data = await response.json();
-
-  if (data.code !== 0) {
-    throw new Error(data.message || 'Request failed');
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
   }
 
-  return data.data;
+  const data = await response.json();
+
+  // 后端有两种响应格式：
+  // 1. 带包装: {code: 0, data: [...], message: "ok"}
+  // 2. 不带包装: 直接返回数组或对象
+  if (data !== null && typeof data === 'object' && !Array.isArray(data) && 'code' in data) {
+    if (data.code !== 0) {
+      throw new Error(data.message || 'Request failed');
+    }
+    return data.data !== undefined ? data.data : data;
+  }
+
+  // 直接返回的数组或对象
+  return data as T;
 }
 
 export const api = {
