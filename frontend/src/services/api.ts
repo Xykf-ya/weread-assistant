@@ -9,6 +9,7 @@ import type {
   CampusInfo,
   ReadingStateUpdate,
   SyncResult,
+  WeRssSyncResult,
   HealthStatus,
   UpcomingOpportunity,
 } from './types';
@@ -58,6 +59,7 @@ export const api = {
     create: (data: AccountCreate) => request<Account>('/accounts', { method: 'POST', body: JSON.stringify(data) }),
     update: (id: number, data: AccountUpdate) => request<Account>(`/accounts/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     delete: (id: number) => request<void>(`/accounts/${id}`, { method: 'DELETE' }),
+    syncFromWeRSS: () => request<WeRssSyncResult>('/accounts/sync-from-werss'),
   },
   articles: {
     getAll: (params?: { account_type?: string; werss_mp_id?: string; limit?: number; offset?: number }) => {

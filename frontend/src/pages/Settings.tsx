@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  Users, 
-  RefreshCw, 
-  Bell, 
+import {
+  ArrowLeft,
+  Users,
+  RefreshCw,
+  Bell,
   Activity,
   Plus,
   Edit2,
@@ -12,7 +12,8 @@ import {
   Check,
   Zap,
   Server,
-  MessageSquare
+  MessageSquare,
+  Download
 } from 'lucide-react';
 import { api } from '../services/api';
 import { VintageCard } from '../components/VintageCard';
@@ -27,6 +28,8 @@ export function Settings() {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [health, setHealth] = useState<HealthStatus | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
+  const [importResult, setImportResult] = useState<string | null>(null);
   const [syncResult, setSyncResult] = useState<SyncResult | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -72,6 +75,20 @@ export function Settings() {
       api.accounts.getAll().then(setAccounts).catch(() => {});
     } catch (error) {
       console.error('添加公众号失败:', error);
+    }
+  };
+
+  const handleImportFromWeRSS = async () => {
+    setIsImporting(true);
+    setImportResult(null);
+    try {
+      const result = await api.accounts.syncFromWeRSS();
+      setImportResult(result.message || `新增 ${result.added} 个，跳过 ${result.skipped} 个`);
+      api.accounts.getAll().then(setAccounts).catch(() => {});
+    } catch (error) {
+      setImportResult('导入失败：' + (error instanceof Error ? error.message : '未知错误'));
+    } finally {
+      setIsImporting(false);
     }
   };
 
@@ -137,14 +154,30 @@ export function Settings() {
     <div>
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-display text-lg font-bold text-sepia-800">监控的公众号</h3>
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="vintage-btn flex items-center gap-2 text-sm"
-        >
-          <Plus className="w-4 h-4" />
-          添加公众号
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleImportFromWeRSS}
+            disabled={isImporting}
+            className="vintage-btn flex items-center gap-2 text-sm"
+          >
+            <Download className={`w-4 h-4 ${isImporting ? 'animate-bounce' : ''}`} />
+            {isImporting ? '导入中...' : '从 WeRSS 导入'}
+          </button>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="vintage-btn flex items-center gap-2 text-sm"
+          >
+            <Plus className="w-4 h-4" />
+            添加公众号
+          </button>
+        </div>
       </div>
+
+      {importResult && (
+        <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-sm text-sm text-green-700">
+          {importResult}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {accounts.map((account) => (

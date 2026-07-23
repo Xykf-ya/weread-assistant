@@ -100,6 +100,15 @@ export interface ReadingStateUpdate {
   notes?: string;
 }
 
+export interface WeRssSyncResult {
+  code: number;
+  message: string;
+  added: number;
+  skipped: number;
+  added_names: string[];
+  skipped_names: string[];
+}
+
 export interface SyncResult {
   total_fetched: number;
   new_articles: number;

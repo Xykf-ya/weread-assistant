@@ -22,7 +22,7 @@ class WeRSSClient:
             return
 
         resp = await client.post(
-            f"{self.base_url}/api/v1/login",
+            f"{self.base_url}/api/v1/wx/auth/login",
             data={"username": self.username, "password": self.password},
         )
         resp.raise_for_status()
