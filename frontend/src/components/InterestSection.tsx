@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Heart, Clock, Bookmark } from 'lucide-react';
+import { Heart, Clock } from 'lucide-react';
 import { api } from '../services/api';
 import { SectionHeader } from './SectionHeader';
 import { VintageCard } from './VintageCard';
@@ -22,11 +22,11 @@ export function InterestSection() {
   };
 
   return (
-    <div className="w-full">
+    <div className="h-full">
       <SectionHeader
-        title="兴趣精选"
-        subtitle="精选文章推荐"
-        icon={<Heart className="w-5 h-5 text-orange-500" />}
+        title="兴趣必读"
+        subtitle="每篇都值得一看"
+        icon={<Heart className="w-5 h-5 text-sepia-600" />}
         count={articles.length}
       />
 
@@ -37,45 +37,46 @@ export function InterestSection() {
       ) : articles.length === 0 ? (
         <div className="text-center py-8 text-sepia-400 text-sm">
           <Heart className="w-10 h-10 mx-auto mb-2 opacity-50" />
-          <p>暂无精选文章</p>
+          <p>暂无文章</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        <div className="space-y-3">
           {articles.slice(0, 15).map((article) => (
             <VintageCard
               key={article.id}
               onClick={() => window.open(article.original_url, '_blank')}
-              className="p-4"
+              className="p-3"
             >
-              {article.cover_url && (
-                <div className="w-full h-32 mb-3 rounded-sm overflow-hidden bg-parchment-200">
+              <div className="flex items-start gap-3">
+                {article.cover_url && (
                   <img
                     src={article.cover_url}
                     alt={article.title}
-                    className="w-full h-full object-cover"
+                    className="w-14 h-10 object-cover rounded-sm flex-shrink-0"
                   />
+                )}
+                <div className="flex-1 min-w-0">
+                  <h3 className="article-title text-sm leading-tight mb-1 line-clamp-2">
+                    {article.title}
+                  </h3>
+                  <div className="flex items-center gap-2 text-xs text-sepia-400">
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {formatTime(article.published_at)}
+                    </span>
+                    {article.mp_name && (
+                      <span className="truncate">{article.mp_name}</span>
+                    )}
+                  </div>
                 </div>
-              )}
-              <h3 className="article-title text-sm leading-tight mb-3 line-clamp-3">
-                {article.title}
-              </h3>
-              {article.summary && (
-                <p className="text-xs text-sepia-500 mb-3 line-clamp-2">
-                  {article.summary}
-                </p>
-              )}
-              <div className="flex items-center justify-between text-xs text-sepia-400">
-                <span className="flex items-center gap-1">
-                  <Clock className="w-3 h-3" />
-                  {formatTime(article.published_at)}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Bookmark className="w-3 h-3" />
-                  {article.author || article.mp_name}
-                </span>
               </div>
             </VintageCard>
           ))}
+          {articles.length > 15 && (
+            <div className="text-center py-2 text-sepia-400 text-xs">
+              还有 {articles.length - 15} 篇
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -219,9 +219,10 @@ export function Settings() {
               )}
             </div>
 
-            <div className="flex items-center justify-end gap-2">
+            <div className="flex items-center justify-end gap-2 relative z-10">
               <button
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   setEditingAccount(account);
                   setFormData({
                     werss_mp_id: account.werss_mp_id,
@@ -237,9 +238,13 @@ export function Settings() {
                 <Edit2 className="w-4 h-4" />
               </button>
               <button
-                onClick={() => handleDeleteAccount(account.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteAccount(account.id);
+                }}
                 disabled={isDeleting === account.id}
-                className="p-2 text-red-500 hover:text-red-700 transition-colors"
+                className="p-2 text-red-500 hover:text-red-700 transition-colors cursor-pointer"
+                title="停用该公众号"
               >
                 {isDeleting === account.id ? (
                   <RefreshCw className="w-4 h-4 animate-spin" />

@@ -1,8 +1,9 @@
 import { Header } from '../components/Header';
 import { OpportunitySection } from '../components/OpportunitySection';
 import { CampusSection } from '../components/CampusSection';
-import { NewsSection } from '../components/NewsSection';
 import { InterestSection } from '../components/InterestSection';
+import { ExcludedSection } from '../components/ExcludedSection';
+// NewsSection temporarily hidden per product focus
 
 interface DashboardProps {
   onSyncStart?: () => void;
@@ -29,8 +30,8 @@ export function Dashboard({ onSyncStart, onSyncEnd }: DashboardProps) {
             <div className="newspaper-line w-full max-w-md mx-auto mt-3" />
           </div>
 
-          {/* Main Content - Four Vertical Columns */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0">
+          {/* Main Content - Three Columns (News removed per product focus) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0">
             {/* Column 1: Opportunities */}
             <div className="relative p-4 md:p-6 border-r border-sepia-300 border-dashed">
               <div className="sticky top-4">
@@ -43,14 +44,7 @@ export function Dashboard({ onSyncStart, onSyncEnd }: DashboardProps) {
               <CampusSection />
             </div>
 
-            {/* Column 3: News */}
-            <div className="relative p-4 md:p-6 border-r border-sepia-300 border-dashed">
-              <div className="sticky top-4">
-                <NewsSection />
-              </div>
-            </div>
-
-            {/* Column 4: Interest */}
+            {/* Column 3: Interest */}
             <div className="relative p-4 md:p-6">
               <InterestSection />
             </div>
@@ -59,6 +53,11 @@ export function Dashboard({ onSyncStart, onSyncEnd }: DashboardProps) {
       </main>
 
       {/* Footer */}
+      {/* Excluded Articles */}
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
+        <ExcludedSection />
+      </div>
+
       <footer className="vintage-footer text-parchment-400 py-4 px-6 mt-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2">
           <p className="text-sm font-handwriting">

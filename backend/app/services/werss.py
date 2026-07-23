@@ -59,7 +59,7 @@ class WeRSSClient:
             resp.raise_for_status()
             data = resp.json()
             if data.get("code") == 0:
-                return data.get("data", {}).get("items", [])
+                return data.get("data", {}).get("list", [])
             return []
         finally:
             await client.aclose()
@@ -89,7 +89,7 @@ class WeRSSClient:
             resp.raise_for_status()
             data = resp.json()
             if data.get("code") == 0:
-                return data.get("data", {}).get("items", [])
+                return data.get("data", {}).get("list", [])
             return []
         finally:
             await client.aclose()

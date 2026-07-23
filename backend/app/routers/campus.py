@@ -18,8 +18,11 @@ async def list_campus_events(
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
 ):
-    """获取校园活动列表"""
-    query = db.query(CampusInfo).join(Article, CampusInfo.article_id == Article.id)
+    """获取校园活动列表（只展示有效分类：event/lecture/competition/volunteer/internship/notice）"""
+    VALID_TYPES = {"event", "lecture", "competition", "volunteer", "internship", "notice"}
+    query = db.query(CampusInfo).join(Article, CampusInfo.article_id == Article.id).filter(
+        CampusInfo.event_type.in_(VALID_TYPES)
+    )
 
     if event_type:
         query = query.filter(CampusInfo.event_type == event_type)

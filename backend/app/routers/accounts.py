@@ -18,11 +18,9 @@ async def list_accounts(
     db: Session = Depends(get_db),
 ):
     """获取公众号列表"""
-    query = db.query(MonitoredAccount)
+    query = db.query(MonitoredAccount).filter(MonitoredAccount.is_active == True)
     if account_type:
         query = query.filter(MonitoredAccount.account_type == account_type)
-    if is_active is not None:
-        query = query.filter(MonitoredAccount.is_active == is_active)
     return query.order_by(MonitoredAccount.created_at.desc()).all()
 
 
@@ -100,14 +98,14 @@ async def sync_accounts_from_werss(db: Session = Depends(get_db)):
             MonitoredAccount.werss_mp_id == werss_mp_id
         ).first()
         if existing:
-            skipped.append({"name": mp.get("name", mp.get("nickname", "未知")), "reason": "已存在"})
+            skipped.append({"name": mp.get("mp_name", "未知"), "reason": "已存在"})
             continue
 
         # 新建（默认设为 opportunity 类型，用户可在前端修改）
         acc = MonitoredAccount(
             werss_mp_id=werss_mp_id,
-            mp_name=mp.get("name") or mp.get("nickname", "未知"),
-            cover_url=mp.get("cover_url") or mp.get("head_img"),
+            mp_name=mp.get("mp_name", "未知"),
+            cover_url=mp.get("mp_cover"),
             account_type="opportunity",
             tags="[]",
         )
